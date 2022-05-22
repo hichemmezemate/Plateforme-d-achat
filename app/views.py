@@ -44,10 +44,9 @@ class CatalogView(View):
     def get(self, request):
         products = Product.objects.all()
 
-        if "cart_id" in request.COOKIES and request.COOKIES["cart_id"] != 'None':
-            cart = Cart.objects.filter(id=request.COOKIES["cart_id"]).first()
-            if cart.checked_out:
-                cart = None
+        cart = self._get_cart(request)
+        if cart.checked_out:
+            cart = None
 
         if cart is None:
             cart = Cart()
@@ -64,10 +63,9 @@ class CatalogView(View):
         return response
 
     def patch(self, request):
-        if "cart_id" in request.COOKIES and request.COOKIES["cart_id"] != 'None':
-            cart = Cart.objects.filter(id=request.COOKIES["cart_id"]).first()
-            if cart.checked_out:
-                cart = None
+        cart = self._get_cart(request)
+        if cart.checked_out:
+            cart = None
 
         if cart is None:
             return HttpResponse(status=404)
@@ -93,3 +91,25 @@ class CatalogView(View):
             item.save()
 
         return HttpResponse(status=202)
+
+    def post(self, request):
+        cart = self._get_cart(request)
+        if cart is None:
+            return HttpResponse(status=400)
+
+        cart.checked_out = True
+        cart.save()
+
+        for item in cart.items():
+            product = item.product
+            if product.max_inventory < product.ordered_inventory + item.quantity:
+                return HttpResponse(status=400)
+            product.ordered_inventory = product.ordered_inventory + item.quantity
+            product.save()
+
+        return redirect("/catalog")
+
+    def _get_cart(self, request):
+        if "cart_id" in request.COOKIES and request.COOKIES["cart_id"] != 'None':
+            return Cart.objects.filter(id=request.COOKIES["cart_id"]).first()
+        return None
