@@ -1,7 +1,7 @@
 from django.views import View
 from django.shortcuts import render, redirect
 from app.forms import ProductForm
-from app.models import Product
+from app.models import Product, Cart
 
 
 # Create your views here.
@@ -40,6 +40,22 @@ class CatalogView(View):
 
     def get(self, request):
         products = Product.objects.all()
-        return render(request, "catalog.html", {
-            "products": products
+
+        if "cart_id" in request.COOKIES and request.COOKIES["cart_id"] != 'None':
+            cart = Cart.objects.filter(id=request.COOKIES["cart_id"]).first()
+            if cart.checked_out:
+                cart = None
+
+        if cart is None:
+            cart = Cart()
+            cart.checked_out = False
+            cart.save()
+
+        response = render(request, "catalog.html", {
+            "products": products,
+            "cart": cart
         })
+
+        response.set_cookie("cart_id", cart.id)
+
+        return response

@@ -17,7 +17,6 @@ class Product(models.Model):
 
 
 class Cart(models.Model):
-    id = models.IntegerField(primary_key=True)
     checked_out = models.BooleanField(default=False)
 
     def total_ttc(self):
