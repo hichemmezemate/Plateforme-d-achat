@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'inventory.css' %}">
+    <title>Catalogue</title>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="title">
+            Catalogue
+        </div>
+        <table class="customTable">
+            <thead>
+            <tr>
+                <th>Produit</th>
+                <th>Prix</th>
+                <th>Quantité</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for product in products %}
+                <tr>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.price_ttc|stringformat:".2f" }}</td>
+                    <td>
+                        <input
+                                id="quantity"
+                                type="number"
+                                value="0"
+                                max="{{ product.available_inventory }}"
+                                min="0"
+                                onchange="onQuantityChanged({{ product.id }}, {{ product.price_ttc }}, value)"/>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    <h4>Total TTC : <span id="total_ttc">0</span></h4>
+    </div>
+</body>
+<script>
+    let totalTTC = 0;
+    let cart = {};
+    function onQuantityChanged(productId, productPriceTTC, quantity) {
+        quantity = parseInt(quantity);
+        cart[productId] = productPriceTTC * quantity;
+        totalTTC = productPriceTTC * quantity;
+        for (const id of Object.keys(cart)) {
+            if (id !== productId.toString()) {
+                totalTTC += cart[id];
+            }
+        }
+        document.getElementById("total_ttc").innerText = totalTTC.toFixed(2);
+    }
+</script>
+</html>

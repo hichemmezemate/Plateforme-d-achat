@@ -23,5 +23,6 @@ import app.views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('inventory', app.views.InventoryView.as_view(), name='inventory'),
-    path('create-product', app.views.ProductView.as_view(), name='create-app')
+    path('create-product', app.views.ProductView.as_view(), name='create-app'),
+    path('catalog', app.views.CatalogView.as_view(), name='catalog')
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

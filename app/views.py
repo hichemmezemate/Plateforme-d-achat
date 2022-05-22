@@ -34,3 +34,12 @@ class ProductView(View):
             product.save()
 
         return redirect("inventory")
+
+
+class CatalogView(View):
+
+    def get(self, request):
+        products = Product.objects.all()
+        return render(request, "catalog.html", {
+            "products": products
+        })
