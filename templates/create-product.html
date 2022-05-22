@@ -1,0 +1,41 @@
+{% load static %}
+{% csrf_token %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'inventory.css' %}">
+    <title>Catalogue</title>
+</head>
+<body>
+<form method="post" target="_self">
+    <div>
+        <label for="name">Nom de produit</label>
+        <input id="name" name="name" type="text"/>
+    </div>
+    <div>
+        <label for="price_ht">Prix hors taxes</label>
+        <input id="price_ht" name="price_ht" type="number"/>
+    </div>
+    <div>
+        <label for="vat">TVA</label>
+        <select id="vat" name="vat">
+            <option>selectionner</option>
+            <option value="0.055">5.5%</option>
+            <option value="0.2">20%</option>
+        </select>
+    </div>
+    <div>
+        <label for="ordered_inventory">Stock commandé</label>
+        <input id="ordered_inventory" name="ordered_inventory" type="number"/>
+    </div>
+    <div>
+        <label for="max_inventory">Stock maximum disponible</label>
+        <input id="max_inventory" name="max_inventory" type="number"/>
+    </div>
+    <input type="submit" name="Valider" />
+</form>
+</body>
+</html>

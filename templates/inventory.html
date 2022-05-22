@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'inventory.css' %}">
+    <title>Catalogue</title>
+</head>
+<body>
+
+    <div class="wrapper">
+        <div class="title">
+            Inventaire
+        </div>
+        <table class="customTable">
+            <thead>
+            <tr>
+                <th>Produit</th>
+                <th>Prix</th>
+                <th>Quantité</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Carotte</td>
+                <td>1.99</td>
+                <td>2</td>
+            </tr>
+            <tr>
+                <td>Pomme de terre</td>
+                <td>2.99</td>
+                <td>5</td>
+            </tr>
+            <tr>
+                <td>Tomate </td>
+                <td>0.99</td>
+                <td>3</td>
+            </tr>
+            <tr>
+                <td>Banane</td>
+                <td>1.99</td>
+                <td>1</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="buttons">
+            <a class="add" href="create-product">
+                Ajouter
+            </a>
+
+            <button class="delete">
+                Supprimer
+            </button>
+        </div>
+    </div>
+
+
+</body>
+</html>
