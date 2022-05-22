@@ -8,7 +8,10 @@ from app.models import Product
 class InventoryView(View):
 
     def get(self, request):
-        return render(request, "inventory.html")
+        products = Product.objects.all()
+        return render(request, "inventory.html", {
+            "products": products
+        })
 
 
 class ProductView(View):

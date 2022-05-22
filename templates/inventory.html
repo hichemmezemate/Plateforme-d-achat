@@ -23,26 +23,13 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>Carotte</td>
-                <td>1.99</td>
-                <td>2</td>
-            </tr>
-            <tr>
-                <td>Pomme de terre</td>
-                <td>2.99</td>
-                <td>5</td>
-            </tr>
-            <tr>
-                <td>Tomate </td>
-                <td>0.99</td>
-                <td>3</td>
-            </tr>
-            <tr>
-                <td>Banane</td>
-                <td>1.99</td>
-                <td>1</td>
-            </tr>
+            {% for product in products %}
+                <tr>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.price_ttc }}</td>
+                    <td>{{ product.available_inventory }}</td>
+                </tr>
+            {% endfor %}
             </tbody>
         </table>
 
