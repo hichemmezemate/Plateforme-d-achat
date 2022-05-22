@@ -1,7 +1,10 @@
+import json
+
+from django.http import HttpResponse
 from django.views import View
 from django.shortcuts import render, redirect
 from app.forms import ProductForm
-from app.models import Product, Cart
+from app.models import Product, Cart, Item
 
 
 # Create your views here.
@@ -59,3 +62,34 @@ class CatalogView(View):
         response.set_cookie("cart_id", cart.id)
 
         return response
+
+    def patch(self, request):
+        if "cart_id" in request.COOKIES and request.COOKIES["cart_id"] != 'None':
+            cart = Cart.objects.filter(id=request.COOKIES["cart_id"]).first()
+            if cart.checked_out:
+                cart = None
+
+        if cart is None:
+            return HttpResponse(status=404)
+
+        body = json.loads(request.body)
+
+        product_id = body["product_id"]
+        quantity = body["quantity"]
+
+        item = cart.items().filter(product_id=product_id).first()
+
+        if item is not None:
+            if quantity == 0:
+                item.delete()
+            else:
+                item.quantity = quantity
+                item.save()
+        else:
+            item = Item()
+            item.cart_id = cart.id
+            item.product_id = product_id
+            item.quantity = quantity
+            item.save()
+
+        return HttpResponse(status=202)

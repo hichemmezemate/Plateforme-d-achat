@@ -2,6 +2,9 @@ from django.db import models
 
 
 # Create your models here.
+from django.template.defaultfilters import register
+
+
 class Product(models.Model):
     name = models.CharField(blank=False, max_length=64)
     price_ht = models.FloatField(blank=False, null=False)
@@ -19,11 +22,13 @@ class Product(models.Model):
 class Cart(models.Model):
     checked_out = models.BooleanField(default=False)
 
+    def items(self):
+        return Item.objects.filter(cart_id=self.id)
+
     def total_ttc(self):
-        items = Item.objects.filter(cart_id=self.id)
         total_ttc = 0
-        for item in items:
-            total_ttc = total_ttc + item.product.price_ttc()
+        for item in self.items():
+            total_ttc = total_ttc + item.product.price_ttc() * item.quantity
         return total_ttc
 
 
@@ -31,3 +36,6 @@ class Item(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField()
+
+    def total_ttc(self):
+        return self.product.price_ttc() * self.quantity
