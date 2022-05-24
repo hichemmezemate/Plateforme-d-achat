@@ -45,7 +45,7 @@ class CatalogView(View):
         products = Product.objects.all()
 
         cart = self._get_cart(request)
-        if cart.checked_out:
+        if cart is not None and cart.checked_out:
             cart = None
 
         if cart is None:
